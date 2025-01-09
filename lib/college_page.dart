@@ -1,33 +1,239 @@
 import 'package:flutter/material.dart';
 
-class CollegePage extends StatelessWidget {
-  final List<Map<String, String>> flashCards = [
+class CollegePage extends StatefulWidget {
+  @override
+  _CollegePageState createState() => _CollegePageState();
+}
+
+class _CollegePageState extends State<CollegePage> with SingleTickerProviderStateMixin {
+  final List<Map<String, dynamic>> collegeInfo = [
     {
-      'image': 'assets/images/college.jpg',  // Replace with your image path
-      'caption': 'Our college building - where all the learning happens.',
+      'title': 'BMSIT College',
+      'icon': Icons.school,
+      'description': 'BMS Institute of Technology and Management, established in 2002, is a premier engineering college located in Bangalore. Known for excellence in technical education, research and innovation.',
+      'details': [
+        'NAAC A+ Accredited Institution',
+        'NBA Accredited Programs',
+        'State-of-the-art Infrastructure',
+        'Industry-aligned Curriculum',
+        'Strong Alumni Network'
+      ]
+    },
+    {
+      'title': 'Founders',
+      'icon': Icons.people,
+      'description': 'The visionary founders of BMSIT established the institution with the goal of providing quality technical education.',
+      'details': [
+        'Late Sri. B.M. Sreenivasaiah',
+        'Distinguished Educationalist',
+        'Pioneering Vision in Technical Education',
+        'Legacy of Excellence',
+        'Community Service Focus'
+      ]
+    },
+    {
+      'title': 'Principal & Management',
+      'icon': Icons.admin_panel_settings,
+      'description': 'Under the leadership of our distinguished Principal and Management team, BMSIT continues to achieve new heights in academic excellence.',
+      'details': [
+        'Experienced Leadership Team',
+        'Student-Centric Approach',
+        'Research Focus',
+        'Industry Connections',
+        'Continuous Innovation'
+      ]
+    },
+    {
+      'title': 'Dexter - The College Doggo',
+      'icon': Icons.pets,
+      'description': 'Meet Dexter, our beloved campus mascot! This friendly furry friend brings joy to students and faculty alike.',
+      'details': [
+        'Campus Guardian',
+        'Student\'s Best Friend',
+        'Known for His Friendly Nature',
+        'Always Present at College Events',
+        'Instagram Celebrity'
+      ]
     },
   ];
+
+  int selectedIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple[50],  // Light purple background
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('About Our College'),
-        backgroundColor: Colors.deepPurple[900],
-      ),
-      body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,  // Number of cards per row
-          crossAxisSpacing: 10,  // Horizontal spacing between cards
-          mainAxisSpacing: 10,   // Vertical spacing between cards
+        centerTitle: true,
+        title: ShaderMask(
+          shaderCallback: (bounds) => LinearGradient(
+            colors: [Colors.purple[300]!, Colors.deepPurple[400]!],
+          ).createShader(bounds),
+          child: Text(
+            'About Our College',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              letterSpacing: 1.2,
+            ),
+          ),
         ),
-        padding: const EdgeInsets.all(10.0),
-        itemCount: flashCards.length,
-        itemBuilder: (context, index) {
-          return FlashCard(
-            imagePath: flashCards[index]['image']!,
-            caption: flashCards[index]['caption']!,
+        backgroundColor: Colors.black,
+        elevation: 0,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black, Colors.deepPurple.withOpacity(0.3), Colors.black],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+        ),
+        child: Row(
+          children: [
+            // Vertical Tabs
+            Container(
+              width: 300,
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(vertical: 20),
+                itemCount: collegeInfo.length,
+                itemBuilder: (context, index) {
+                  return NeonTab(
+                    title: collegeInfo[index]['title'],
+                    icon: collegeInfo[index]['icon'],
+                    isSelected: selectedIndex == index,
+                    onTap: () {
+                      setState(() {
+                        selectedIndex = selectedIndex == index ? -1 : index;
+                      });
+                    },
+                  );
+                },
+              ),
+            ),
+            // Content Area
+            if (selectedIndex != -1)
+              Expanded(
+                child: AnimatedContentPanel(
+                  info: collegeInfo[selectedIndex],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NeonTab extends StatefulWidget {
+  final String title;
+  final IconData icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  NeonTab({
+    required this.title,
+    required this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  _NeonTabState createState() => _NeonTabState();
+}
+
+class _NeonTabState extends State<NeonTab> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _glowAnimation;
+  bool _isHovering = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 1500),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _glowAnimation = Tween<double>(begin: 2.0, end: 4.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovering = true),
+      onExit: (_) => setState(() => _isHovering = false),
+      child: AnimatedBuilder(
+        animation: _glowAnimation,
+        builder: (context, child) {
+          return GestureDetector(
+            onTap: widget.onTap,
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.purple[400]!.withOpacity(0.6),
+                    blurRadius: _glowAnimation.value *
+                        (widget.isSelected || _isHovering ? 8 : 5),
+                    spreadRadius: _glowAnimation.value *
+                        (widget.isSelected || _isHovering ? 2 : 1),
+                  ),
+                ],
+                border: Border.all(
+                  color: Colors.purple[400]!,
+                  width: 2.0,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    widget.icon,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                  SizedBox(width: 16),
+                  Expanded(
+                    child: ShaderMask(
+                      shaderCallback: (bounds) => LinearGradient(
+                        colors: [
+                          Colors.purple[300]!,
+                          Colors.white,
+                          Colors.purple[300]!,
+                        ],
+                        stops: [0.0, 0.5, 1.0],
+                      ).createShader(bounds),
+                      child: Text(
+                        widget.title,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.purple[400]!,
+                              blurRadius: _glowAnimation.value * 3,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -35,86 +241,73 @@ class CollegePage extends StatelessWidget {
   }
 }
 
-class FlashCard extends StatelessWidget {
-  final String imagePath;
-  final String caption;
+class AnimatedContentPanel extends StatelessWidget {
+  final Map<String, dynamic> info;
 
-  FlashCard({
-    required this.imagePath,
-    required this.caption,
-  });
+  AnimatedContentPanel({required this.info});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: Colors.deepPurple[700],
-              title: Text(
-                'College Info',
-                style: TextStyle(color: Colors.white),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      imagePath,
-                      width: 150,
-                      height: 150,
-                      fit: BoxFit.cover,
+    return Container(
+      padding: EdgeInsets.all(24),
+      child: TweenAnimationBuilder(
+        duration: Duration(milliseconds: 500),
+        tween: Tween<double>(begin: 0, end: 1),
+        builder: (context, double value, child) {
+          return Opacity(
+            opacity: value,
+            child: Transform.scale(
+              scale: 0.8 + (0.2 * value),
+              child: Container(
+                padding: EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.6),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Colors.purple[400]!,
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.purple[400]!.withOpacity(0.3),
+                      blurRadius: 15,
+                      spreadRadius: 5,
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    caption,
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-      child: Card(
-        elevation: 6,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.deepPurple[700],  // Dark box for flash card
-            ),
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    imagePath,
-                    height: 100,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        info['description'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          height: 1.5,
+                        ),
+                      ),
+                      SizedBox(height: 24),
+                      ...List.generate(
+                        info['details'].length,
+                            (index) => Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Text(
+                            '• ${info['details'][index]}',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.9),
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    caption,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

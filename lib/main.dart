@@ -4,6 +4,9 @@ import 'college_page.dart';
 import 'home_page.dart';
 import 'companies_page.dart';
 import 'facts_page.dart';
+import 'starry_background.dart';
+import 'hangman.dart';
+import 'chatbot.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,11 +19,13 @@ class MyApp extends StatelessWidget {
       title: 'College Club App',
       initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(),
-        '/college': (context) => CollegePage(),
-        '/companies': (context) => CompaniesPage(),
-        '/club': (context) => ClubPage(),
-        '/facts': (context) => FactsPage(),
+        '/': (context) => StarryBackground(child: HomePage()),
+        '/college': (context) => StarryBackground(child: CollegePage()),
+        '/companies': (context) => StarryBackground(child: CompaniesPage()),
+        '/club': (context) => StarryBackground(child: ClubPage()),
+        '/facts': (context) => StarryBackground(child: FactsPage()),
+        '/hangman': (context) => StarryBackground(child: HangmanGame()),
+        '/chatbot': (context) => StarryBackground(child: ChatbotScreen()),
       },
       theme: ThemeData.dark(),
     );
