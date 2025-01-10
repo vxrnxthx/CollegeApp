@@ -53,9 +53,9 @@ class _HangmanGameState extends State<HangmanGame> {
             colors: [Colors.purple[300]!, Colors.deepPurple[400]!],
           ).createShader(bounds),
           child: Text(
-            "Can you save the dying man?",
+            "Save the Man!",
             style: TextStyle(
-              fontSize: 30,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               letterSpacing: 1.5,
               color: Colors.white,
@@ -65,127 +65,155 @@ class _HangmanGameState extends State<HangmanGame> {
         backgroundColor: Colors.black,
         elevation: 0,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Center(
-            child: CustomPaint(
-              size: Size(120, 160), // Slightly smaller stick figure
-              painter: NeonHangmanPainter(maxAttempts - remainingAttempts),
-            ),
-          ),
-          Text(
-            getDisplayedWord(),
-            style: TextStyle(
-              fontSize: 32,
-              letterSpacing: 4,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              shadows: [
-                Shadow(
-                  color: Colors.purple[400]!,
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-          ),
-          Text(
-            "Attempts Remaining: $remainingAttempts",
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.white,
-              shadows: [
-                Shadow(
-                  color: Colors.purple[400]!,
-                  blurRadius: 8,
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 6,
-              runSpacing: 10,
-              children: 'abcdefghijklmnopqrstuvwxyz'
-                  .split('')
-                  .map((letter) => GestureDetector(
-                onTap: guessedLetters.contains(letter) ||
-                    remainingAttempts == 0
-                    ? null
-                    : () => guessLetter(letter),
-                child: Container(
-                  width: 50,  // Fixed width for square buttons
-                  height: 50, // Fixed height for square buttons
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(8.0),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.purple[400]!.withOpacity(0.6),
-                        blurRadius: 8,
-                        spreadRadius: 2,
-                      ),
-                    ],
-                    border: Border.all(
-                      color: Colors.purple[400]!,
-                      width: 2.0,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Fixed content at the top
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Column(
+                children: [
+                  Center(
+                    child: CustomPaint(
+                      size: Size(120, 160),
+                      painter: NeonHangmanPainter(maxAttempts - remainingAttempts),
                     ),
                   ),
-                  padding: const EdgeInsets.all(4), // Adjust padding for smaller buttons
-                  child: Center(
-                    child: ShaderMask(
-                      shaderCallback: (bounds) => LinearGradient(
-                        colors: [
-                          Colors.purple[300]!,
-                          Colors.deepPurple[300]!,
-                        ],
-                      ).createShader(bounds),
-                      child: Text(
-                        letter.toUpperCase(),
-                        style: TextStyle(
-                          fontSize: 12, // Adjust font size to fit the smaller buttons
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          shadows: [
-                            Shadow(
-                              color: Colors.purple[300]!,
-                              blurRadius: 10,
-                            ),
-                          ],
+                  SizedBox(height: 20),
+                  Text(
+                    getDisplayedWord(),
+                    style: TextStyle(
+                      fontSize: 32,
+                      letterSpacing: 4,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          color: Colors.purple[400]!,
+                          blurRadius: 10,
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ),
-              ))
-                  .toList(),
-            ),
-          ),
-          if (remainingAttempts == 0 ||
-              getDisplayedWord().replaceAll(' ', '') == selectedWord)
-            ElevatedButton(
-              onPressed: resetGame,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
-                side: BorderSide(color: Colors.purple[400]!, width: 2),
+                  SizedBox(height: 10),
+                  Text(
+                    "Attempts Remaining: $remainingAttempts",
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.purple[400]!,
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              child: ShaderMask(
-                shaderCallback: (bounds) => LinearGradient(
-                  colors: [Colors.purple[300]!, Colors.deepPurple[300]!],
-                ).createShader(bounds),
-                child: Text(
-                  "Play Again",
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+            ),
+            // Scrollable keyboard area
+            Expanded(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    children: [
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 6,
+                        runSpacing: 10,
+                        children: 'abcdefghijklmnopqrstuvwxyz'
+                            .split('')
+                            .map((letter) => GestureDetector(
+                          onTap: guessedLetters.contains(letter) ||
+                              remainingAttempts == 0
+                              ? null
+                              : () => guessLetter(letter),
+                          child: Container(
+                            width: 30,
+                            height: 30,
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(8.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                  Colors.purple[400]!.withOpacity(0.6),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                              border: Border.all(
+                                color: Colors.purple[400]!,
+                                width: 2.0,
+                              ),
+                            ),
+                            padding: const EdgeInsets.all(4),
+                            child: Center(
+                              child: ShaderMask(
+                                shaderCallback: (bounds) => LinearGradient(
+                                  colors: [
+                                    Colors.purple[300]!,
+                                    Colors.deepPurple[300]!,
+                                  ],
+                                ).createShader(bounds),
+                                child: Text(
+                                  letter.toUpperCase(),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.purple[300]!,
+                                        blurRadius: 10,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ))
+                            .toList(),
+                      ),
+                      SizedBox(height: 20),
+                      if (remainingAttempts == 0 ||
+                          getDisplayedWord().replaceAll(' ', '') == selectedWord)
+                        ElevatedButton(
+                          onPressed: resetGame,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            side:
+                            BorderSide(color: Colors.purple[400]!, width: 2),
+                          ),
+                          child: ShaderMask(
+                            shaderCallback: (bounds) => LinearGradient(
+                              colors: [
+                                Colors.purple[300]!,
+                                Colors.deepPurple[300]!
+                              ],
+                            ).createShader(bounds),
+                            child: Text(
+                              "Play Again",
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      SizedBox(height: 20),
+                    ],
                   ),
                 ),
               ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -202,7 +230,7 @@ class NeonHangmanPainter extends CustomPainter {
       ..color = Colors.purple[400]!
       ..strokeWidth = 4
       ..style = PaintingStyle.stroke
-      ..maskFilter = MaskFilter.blur(BlurStyle.solid, 2); // Sharper glow effect
+      ..maskFilter = MaskFilter.blur(BlurStyle.solid, 2);
 
     // Base
     canvas.drawLine(

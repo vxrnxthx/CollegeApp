@@ -58,9 +58,9 @@ class _ChatbotScreenState extends State<ChatbotScreen> with SingleTickerProvider
             colors: [Colors.purple[300]!, Colors.deepPurple[400]!],
           ).createShader(bounds),
           child: Text(
-            'Hey! Dexter here! What can I help you with today?',
+            'Welcome to Chat with Dexter',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'starry_background.dart';
+import 'scrolling_announcement.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -26,42 +27,56 @@ class HomePage extends StatelessWidget {
         elevation: 0,
       ),
       body: StarryBackground(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              NeonOptionCard(
-                title: "Fortune 500 Companies",
-                onTap: () => Navigator.pushNamed(context, '/companies'),
-                glowColor: Colors.purple[300]!,
+        child: Column(
+          children: [
+            ScrollingAnnouncement(
+              text: "🌟 Welcome to PRiME! Join us for the upcoming tech talk this Friday at 5 PM in the Innovation Hub 🚀",
+              glowColor: Colors.purple[300]!,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      NeonOptionCard(
+                        title: "Fortune 500 Companies",
+                        onTap: () => Navigator.pushNamed(context, '/companies'),
+                        glowColor: Colors.purple[300]!,
+                      ),
+                      NeonOptionCard(
+                        title: "About Our College",
+                        onTap: () => Navigator.pushNamed(context, '/college'),
+                        glowColor: Colors.deepPurple[300]!,
+                      ),
+                      NeonOptionCard(
+                        title: "About Our Club",
+                        onTap: () => Navigator.pushNamed(context, '/club'),
+                        glowColor: Colors.purple[400]!,
+                      ),
+                      NeonOptionCard(
+                        title: "101 Things About Our College",
+                        onTap: () => Navigator.pushNamed(context, '/facts'),
+                        glowColor: Colors.deepPurple[400]!,
+                      ),
+                      NeonOptionCard(
+                        title: "Game Time with Prime",
+                        onTap: () => Navigator.pushNamed(context, '/hangman'),
+                        glowColor: Colors.purple[500]!,
+                      ),
+                      NeonOptionCard(
+                        title: "Chat with Dexter",
+                        onTap: () => Navigator.pushNamed(context, '/chatbot'),
+                        glowColor: Colors.deepPurple[500]!,
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              NeonOptionCard(
-                title: "About Our College",
-                onTap: () => Navigator.pushNamed(context, '/college'),
-                glowColor: Colors.deepPurple[300]!,
-              ),
-              NeonOptionCard(
-                title: "About Our Club",
-                onTap: () => Navigator.pushNamed(context, '/club'),
-                glowColor: Colors.purple[400]!,
-              ),
-              NeonOptionCard(
-                title: "101 Things About Our College",
-                onTap: () => Navigator.pushNamed(context, '/facts'),
-                glowColor: Colors.deepPurple[400]!,
-              ),
-              NeonOptionCard(
-                title: "Game Time with Prime",
-                onTap: () => Navigator.pushNamed(context, '/hangman'),
-                glowColor: Colors.purple[500]!,
-              ),
-              NeonOptionCard(
-                title: "Chat with Dexter",
-                onTap: () => Navigator.pushNamed(context, '/chatbot'),
-                glowColor: Colors.deepPurple[500]!,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
