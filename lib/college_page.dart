@@ -72,7 +72,7 @@ class _CollegePageState extends State<CollegePage> with SingleTickerProviderStat
           child: Text(
             'About Our College',
             style: TextStyle(
-              fontSize: 32,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: 1.2,

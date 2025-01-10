@@ -47,7 +47,7 @@ class ClubPage extends StatelessWidget {
           child: Text(
             "About Our Club",
             style: TextStyle(
-              fontSize: 32,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: 1.2,

@@ -33,7 +33,7 @@ class CompaniesPage extends StatelessWidget {
           child: Text(
             "Fortune 500 Companies",
             style: TextStyle(
-              fontSize: 32,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: Colors.white,
               letterSpacing: 1.2,
